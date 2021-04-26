@@ -71,7 +71,7 @@ jobs:
                 downloadPath: '$(System.ArtifactsDirectory)'
             
             - powershell: |
-                cd $(System.ArtifactsDirectory)
+                cd $(System.ArtifactsDirectory)/drop
                 ls
 
             - task: AzureResourceManagerTemplateDeployment@3
@@ -81,6 +81,8 @@ jobs:
                 subscriptionId: '337ba254-3aa0-4551-ba8e-89debefaa373'
                 action: 'Create Or Update Resource Group'
                 resourceGroupName: 'RG-Synapse'
-                location: '$(System.ArtifactsDirectory)/drop/azuredeploy.json'
+                location: 'North Europe'
                 templateLocation: 'Linked artifact'
+                csmFile: '$(System.ArtifactsDirectory)/drop/azuredeploy.json'
+                csmParametersFile: '$(System.ArtifactsDirectory)/drop/azuredeploy.parameters.json'
                 deploymentMode: 'Incremental'
