@@ -46,9 +46,7 @@ jobs:
         SourceFolder: '$(Build.SourcesDirectory)/101-synapse-poc/'
         Contents: '**'
         TargetFolder: '$(Build.ArtifactsStagingDirectory)'
-
-    - powershell: |
-                Get-ChildItem $(Build.ArtifactsStagingDirectory) -Recurse
+ 
 
     - task: PublishBuildArtifacts@1
       displayName: publish artifacts
