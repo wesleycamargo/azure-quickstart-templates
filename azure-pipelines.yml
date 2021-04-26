@@ -39,18 +39,21 @@ jobs:
     #     arguments: '--output $(Build.ArtifactStagingDirectory)'
     
     - powershell: |
-                cd $(Build.SourcesDirectory)
-                ls
+                ls $(Build.SourcesDirectory)
+
     - task: CopyFiles@2
       inputs:
         SourceFolder: '$(Build.SourcesDirectory)/101-synapse-poc/'
         Contents: '**'
         TargetFolder: '$(Build.ArtifactsStagingDirectory)'
 
+    - powershell: |
+                Get-ChildItem $(Build.ArtifactsStagingDirectory) -Recurse
+
     - task: PublishBuildArtifacts@1
       displayName: publish artifacts
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        PathtoPublish: '$(Build.ArtifactsStagingDirectory)'
         ArtifactName: 'drop'
         publishLocation: 'Container'
 
