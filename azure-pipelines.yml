@@ -38,6 +38,9 @@ jobs:
     #     publishWebProjects: true
     #     arguments: '--output $(Build.ArtifactStagingDirectory)'
     
+    - powershell: |
+                cd $(Build.SourcesDirectory)
+                ls
     - task: CopyFiles@2
       inputs:
         SourceFolder: '$(Build.SourcesDirectory)/101-synapse-poc/*'
@@ -50,3 +53,33 @@ jobs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'drop'
         publishLocation: 'Container'
+
+  - deployment: 
+    displayName: ARM Template
+    environment: develop
+    dependsOn: BuildJob
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - task: DownloadBuildArtifacts@0
+              inputs:
+                buildType: 'current'
+                downloadType: 'single'
+                artifactName: 'drop'
+                downloadPath: '$(System.ArtifactsDirectory)'
+            
+            - powershell: |
+                cd $(System.ArtifactsDirectory)
+                ls
+
+            - task: AzureResourceManagerTemplateDeployment@3
+              inputs:
+                deploymentScope: 'Resource Group'
+                azureResourceManagerConnection: 'MVP Sponsorship'
+                subscriptionId: '337ba254-3aa0-4551-ba8e-89debefaa373'
+                action: 'Create Or Update Resource Group'
+                resourceGroupName: 'RG-Synapse'
+                location: '$(System.ArtifactsDirectory)/'
+                templateLocation: 'Linked artifact'
+                deploymentMode: 'Incremental'
