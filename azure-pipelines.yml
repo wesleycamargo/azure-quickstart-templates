@@ -43,7 +43,7 @@ jobs:
                 ls
     - task: CopyFiles@2
       inputs:
-        SourceFolder: '$(Build.SourcesDirectory)/101-synapse-poc/*'
+        SourceFolder: '$(Build.SourcesDirectory)/101-synapse-poc/'
         Contents: '**'
         TargetFolder: '$(Build.ArtifactsStagingDirectory)'
 
